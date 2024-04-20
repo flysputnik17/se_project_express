@@ -8,12 +8,10 @@ const {
 const getItems = (req, res) => {
   Item.find({})
     .then((items) => res.status(200).send(items))
-    .catch((err) => {
-      console.error(err);
-      if (err.name === "DocumentNotFoundError") {
-        res.status(NOT_FOUND_ERROR).send({ message: err.message });
-      }
-      res.status(SERVER_ERROR).send({ message: err.message });
+    .catch(() => {
+      res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -25,9 +23,11 @@ const createItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: err.message });
+        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
       }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -39,12 +39,14 @@ const deleteItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR).send({ message: err.message });
+        return res.status(NOT_FOUND_ERROR).send({ message: "Not found" });
       }
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: err.message });
+        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
       }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -59,12 +61,14 @@ const likeItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: err.message });
+        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR).send({ message: err.message });
+        return res.status(NOT_FOUND_ERROR).send({ message: "Not found" });
       }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -79,12 +83,14 @@ const unlikeItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: err.message });
+        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR).send({ message: err.message });
+        return res.status(NOT_FOUND_ERROR).send({ message: "Not found" });
       }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
