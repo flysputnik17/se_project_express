@@ -7,20 +7,21 @@ const {
   BAD_REQUEST_ERROR,
   NOT_FOUND_ERROR,
   CONFLICT_ERROR,
+  INCORRECT_ERROR,
   SERVER_ERROR,
 } = require("../utils/errors");
 
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.status(200).send({ data: users }))
-    .catch(() =>
-      res
-        .status(SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." })
-    );
-};
+// const getUsers = (req, res) => {
+//   User.find({})
+//     .then((users) => res.status(200).send({ data: users }))
+//     .catch(() =>
+//       res
+//         .status(SERVER_ERROR)
+//         .send({ message: "An error has occurred on the server." })
+//     );
+// };
 
-const getUser = (req, res) => {
+const getCurrentUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
     .orFail()
@@ -41,50 +42,70 @@ const getUser = (req, res) => {
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
+  if (!email || !password) {
+    res
+      .status(BAD_REQUEST_ERROR)
+      .send({ message: "Email or password incorrect" });
+    return;
+  }
   User.findOne({ email })
     .then((user) => {
-      if (!user) {
-        return res
-          .status(CONFLICT_ERROR)
-          .send({ message: "A user with this email already exists" });
+      if (user) {
+        return res.status(CONFLICT_ERROR).send({
+          message: "This email is already registered",
+        });
       }
-      return bcrypt.hash(password, 10).then((hash) =>
-        User.create({ name, avatar, email, password: hash })
-          .then(() => res.status(201).send(user))
-          .catch((err) => {
-            if (err.name === "ValidationError") {
-              return res
-                .status(BAD_REQUEST_ERROR)
-                .send({ message: "Invalid data" });
-            }
-            return res
-              .status(SERVER_ERROR)
-              .send({ message: "An error has occurred on the server." });
-          })
-      );
+
+      return bcrypt
+        .hash(password, 10)
+        .then((hash) => User.create({ name, avatar, email, password: hash }))
+        .then((newUser) => {
+          const payload = newUser.toObject();
+          delete payload.password;
+          res.status(201).send({ data: payload });
+        });
     })
     .catch((err) => {
       console.error(err);
+      if (err.name === "ValidationError") {
+        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
+      }
+
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
 const login = (req, res) => {
   const { email, password } = req.body;
-  return User.findUserByCredentials(email, password)
+  if (!email || !password) {
+    res
+      .status(BAD_REQUEST_ERROR)
+      .send({ message: "Email or password incorrect" });
+    return;
+  }
+  console.log("The password is:", password);
+  console.log("The email is:", email);
+  User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      res.send({ token });
+      return res.send({ token });
     })
     .catch((err) => {
-      res.status(401).send({ message: err.message });
+      if (err.message === "Email or password incorrect") {
+        return res.status(401).send({ message: "Email or password incorrect" });
+      }
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
 module.exports = {
-  getUsers,
-  getUser,
+  getCurrentUser,
   createUser,
   login,
 };
