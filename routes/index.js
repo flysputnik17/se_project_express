@@ -6,10 +6,11 @@ const userRouter = require("./users");
 const itemRouter = require("./clothingItems");
 
 router.use("/items", itemRouter);
-router.use("/users", userRouter);
 
 router.post("/signin", login);
 router.post("/signup", createUser);
+
+router.use("/users", userRouter);
 
 router.use((req, res) => {
   res.status(NOT_FOUND_ERROR).send({ message: "Requested resource not found" });

@@ -12,12 +12,11 @@ const {
 } = require("../utils/errors");
 
 const getCurrentUser = (req, res) => {
-  const { userId } = req.params;
-  User.findById(userId)
+  User.findById(req.user._id)
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      console.error(err);
+      console.error("\nerror is:", err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND_ERROR).send({ message: "Not found" });
       }
@@ -85,6 +84,7 @@ const login = (req, res) => {
       return res.status(200).send({ token });
     })
     .catch((err) => {
+      console.error("\nerror is:", err);
       if (err.message === "Incorrect password or email") {
         return res
           .status(INCORRECT_ERROR)
