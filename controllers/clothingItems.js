@@ -2,6 +2,7 @@ const Item = require("../models/clothingItems");
 const {
   BAD_REQUEST_ERROR,
   NOT_FOUND_ERROR,
+  FORBIDDEN_ERROR,
   SERVER_ERROR,
 } = require("../utils/errors");
 

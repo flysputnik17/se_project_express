@@ -11,16 +11,6 @@ const {
   SERVER_ERROR,
 } = require("../utils/errors");
 
-// const getUsers = (req, res) => {
-//   User.find({})
-//     .then((users) => res.status(200).send({ data: users }))
-//     .catch(() =>
-//       res
-//         .status(SERVER_ERROR)
-//         .send({ message: "An error has occurred on the server." })
-//     );
-// };
-
 const getCurrentUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
@@ -96,7 +86,9 @@ const login = (req, res) => {
     })
     .catch((err) => {
       if (err.message === "Incorrect password or email") {
-        return res.status(401).send({ message: "Incorrect password or email" });
+        return res
+          .status(INCORRECT_ERROR)
+          .send({ message: "Incorrect password or email" });
       }
       return res
         .status(SERVER_ERROR)
@@ -105,6 +97,7 @@ const login = (req, res) => {
 };
 
 module.exports = {
+  getCurrentUser,
   createUser,
   login,
 };
