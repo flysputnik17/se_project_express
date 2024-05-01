@@ -10,14 +10,12 @@ const {
   INCORRECT_ERROR,
   SERVER_ERROR,
 } = require("../utils/errors");
-// const { use } = require("../routes");
 
 const getCurrentUser = (req, res) => {
   User.findById(req.user._id)
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      console.error("\nerror is:", err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND_ERROR).send({ message: "Not found" });
       }
@@ -32,16 +30,18 @@ const getCurrentUser = (req, res) => {
 
 const upDateCurrentUser = (req, res) => {
   const { name, avatar } = req.body;
-  User.findById(req.user._id)
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, avatar },
+    { new: true, runValidators: true }
+  )
     .orFail()
-    .then((user) => {
-      user.name = name;
-      user.avatar = avatar;
-      res.status(200).send(user);
-    })
+    .then((user) => res.status(200).send(user))
 
     .catch((err) => {
-      console.error(err);
+      if (err.name === "ValidationError") {
+        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
+      }
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
       }
@@ -80,7 +80,6 @@ const createUser = (req, res) => {
         });
     })
     .catch((err) => {
-      console.error(err);
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
       }
@@ -99,17 +98,14 @@ const login = (req, res) => {
       .send({ message: "Email or password incorrect" });
     return;
   }
-  console.log("The password is:", password);
-  console.log("The email is:", email);
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      return res.status(200).send({ token });
+      return res.send({ token });
     })
     .catch((err) => {
-      console.error("\nerror is:", err);
       if (err.message === "Incorrect password or email") {
         return res
           .status(INCORRECT_ERROR)

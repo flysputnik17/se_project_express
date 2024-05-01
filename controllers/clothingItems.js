@@ -18,11 +18,9 @@ const getItems = (req, res) => {
 
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
-  console.log(req.user._id);
   Item.create({ name, weather, imageUrl, owner: req.user._id })
     .then((newItem) => res.status(201).send({ data: newItem }))
     .catch((err) => {
-      console.error(err);
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
       }
@@ -34,15 +32,19 @@ const createItem = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-  Item.findByIdAndDelete(itemId)
+  Item.findById(itemId)
     .orFail()
-    .then((item) => res.status(200).send(item))
-    .catch((err) => {
-      if (itemId.owner !== req.user._id) {
+    .then((item) => {
+      if (String(itemId.owner) !== req.user._id) {
         return res
           .status(FORBIDDEN_ERROR)
           .send({ message: "You are not authorized to delete this item." });
       }
+      return item.deleteOne().then(() => {
+        res.send({ message: "Item deleted" });
+      });
+    })
+    .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND_ERROR).send({ message: "Not found" });
       }
@@ -64,7 +66,6 @@ const likeItem = (req, res) => {
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
-      console.error(err);
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
       }
@@ -86,7 +87,6 @@ const unlikeItem = (req, res) => {
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
-      console.error(err);
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
       }
