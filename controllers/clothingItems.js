@@ -38,7 +38,11 @@ const deleteItem = (req, res) => {
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
-      console.error(err);
+      if (itemId.owner !== req.user._id) {
+        return res
+          .status(FORBIDDEN_ERROR)
+          .send({ message: "You are not authorized to delete this item." });
+      }
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND_ERROR).send({ message: "Not found" });
       }

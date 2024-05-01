@@ -10,6 +10,7 @@ const {
   INCORRECT_ERROR,
   SERVER_ERROR,
 } = require("../utils/errors");
+// const { use } = require("../routes");
 
 const getCurrentUser = (req, res) => {
   User.findById(req.user._id)
@@ -22,6 +23,30 @@ const getCurrentUser = (req, res) => {
       }
       if (err.name === "CastError") {
         return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
+      }
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
+    });
+};
+
+const upDateCurrentUser = (req, res) => {
+  const { name, avatar } = req.body;
+  User.findById(req.user._id)
+    .orFail()
+    .then((user) => {
+      user.name = name;
+      user.avatar = avatar;
+      res.status(200).send(user);
+    })
+
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "CastError") {
+        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
+      }
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(NOT_FOUND_ERROR).send({ message: "Not found" });
       }
       return res
         .status(SERVER_ERROR)
@@ -100,4 +125,5 @@ module.exports = {
   getCurrentUser,
   createUser,
   login,
+  upDateCurrentUser,
 };
