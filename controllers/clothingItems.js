@@ -35,7 +35,7 @@ const deleteItem = (req, res) => {
   Item.findById(itemId)
     .orFail()
     .then((item) => {
-      if (String(itemId.owner) !== req.user._id) {
+      if (String(item.owner) !== req.user._id) {
         return res
           .status(FORBIDDEN_ERROR)
           .send({ message: "You are not authorized to delete this item." });
