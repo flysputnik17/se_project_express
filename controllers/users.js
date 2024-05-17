@@ -55,7 +55,9 @@ const upDateCurrentUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, avatar, email, password } = req.body;
+  console.log("express test");
+
+  const { email, password, username, avatar } = req.body;
   if (!email || !password) {
     res
       .status(BAD_REQUEST_ERROR)
@@ -72,7 +74,9 @@ const createUser = (req, res) => {
 
       return bcrypt
         .hash(password, 10)
-        .then((hash) => User.create({ name, avatar, email, password: hash }))
+        .then((hash) =>
+          User.create({ email, password: hash, username, avatar })
+        )
         .then((newUser) => {
           const payload = newUser.toObject();
           delete payload.password;
