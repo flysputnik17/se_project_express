@@ -55,8 +55,6 @@ const upDateCurrentUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  console.log("express test");
-
   const { email, password, username, avatar } = req.body;
   if (!email || !password) {
     res
