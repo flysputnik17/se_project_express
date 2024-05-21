@@ -19,6 +19,8 @@ app.use(express.json());
 app.use(cors());
 app.use("/", mainRouter);
 
+console.log("test");
+
 app.listen(PORT, () => {
   console.log(`App listening at port ${PORT}`);
 });

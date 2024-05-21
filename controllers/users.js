@@ -56,6 +56,7 @@ const upDateCurrentUser = (req, res) => {
 
 const createUser = (req, res) => {
   const { email, password, username, avatar } = req.body;
+
   if (!email || !password) {
     res
       .status(BAD_REQUEST_ERROR)
@@ -78,6 +79,7 @@ const createUser = (req, res) => {
         .then((newUser) => {
           const payload = newUser.toObject();
           delete payload.password;
+          console.log("backend test");
           res.status(201).send({ data: payload });
         });
     })
@@ -94,6 +96,7 @@ const createUser = (req, res) => {
 
 const login = (req, res) => {
   const { email, password } = req.body;
+  console.log("email", email);
   if (!email || !password) {
     res
       .status(BAD_REQUEST_ERROR)
@@ -105,6 +108,7 @@ const login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
+
       return res.send({ token });
     })
     .catch((err) => {
