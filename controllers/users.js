@@ -55,7 +55,7 @@ const upDateCurrentUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { email, password, username, avatar } = req.body;
+  const { email, password, name, avatar } = req.body;
 
   if (!email || !password) {
     res
@@ -73,9 +73,7 @@ const createUser = (req, res) => {
 
       return bcrypt
         .hash(password, 10)
-        .then((hash) =>
-          User.create({ email, password: hash, username, avatar })
-        )
+        .then((hash) => User.create({ email, password: hash, name, avatar }))
         .then((newUser) => {
           const payload = newUser.toObject();
           delete payload.password;
