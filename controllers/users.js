@@ -4,10 +4,10 @@ const User = require("../models/users");
 const { JWT_SECRET } = require("../utils/config");
 
 const {
-  BAD_REQUEST_ERROR,
-  NOT_FOUND_ERROR,
-  CONFLICT_ERROR,
-  INCORRECT_ERROR,
+  BadRequestError,
+  NotFoundError,
+  ConflictError,
+  UnauthorizedError,
   SERVER_ERROR,
 } = require("../utils/errors");
 
@@ -17,10 +17,10 @@ const getCurrentUser = (req, res) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR).send({ message: "Not found" });
+        return res.status(NotFoundError).send({ message: "Not found" });
       }
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
+        return res.status(BadRequestError).send({ message: "Invalid data" });
       }
       return res
         .status(SERVER_ERROR)
@@ -40,13 +40,13 @@ const upDateCurrentUser = (req, res) => {
 
     .catch((err) => {
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
+        return res.status(BadRequestError).send({ message: "Invalid data" });
       }
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
+        return res.status(BadRequestError).send({ message: "Invalid data" });
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR).send({ message: "Not found" });
+        return res.status(NotFoundError).send({ message: "Not found" });
       }
       return res
         .status(SERVER_ERROR)
@@ -59,14 +59,14 @@ const createUser = (req, res) => {
 
   if (!email || !password) {
     res
-      .status(BAD_REQUEST_ERROR)
+      .status(BadRequestError)
       .send({ message: "Email or password incorrect" });
     return;
   }
   User.findOne({ email })
     .then((user) => {
       if (user) {
-        return res.status(CONFLICT_ERROR).send({
+        return res.status(ConflictError).send({
           message: "This email is already registered",
         });
       }
@@ -83,7 +83,7 @@ const createUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
+        return res.status(BadRequestError).send({ message: "Invalid data" });
       }
 
       return res
@@ -97,7 +97,7 @@ const login = (req, res) => {
   console.log("email", email);
   if (!email || !password) {
     res
-      .status(BAD_REQUEST_ERROR)
+      .status(BadRequestError)
       .send({ message: "Email or password incorrect" });
     return;
   }
@@ -112,7 +112,7 @@ const login = (req, res) => {
     .catch((err) => {
       if (err.message === "Incorrect password or email") {
         return res
-          .status(INCORRECT_ERROR)
+          .status(UnauthorizedError)
           .send({ message: "Incorrect password or email" });
       }
       return res

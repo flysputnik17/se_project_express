@@ -1,8 +1,8 @@
 const Item = require("../models/clothingItems");
 const {
-  BAD_REQUEST_ERROR,
-  NOT_FOUND_ERROR,
-  FORBIDDEN_ERROR,
+  BadRequestError,
+  NotFoundError,
+  ForbiddenError,
   SERVER_ERROR,
 } = require("../utils/errors");
 
@@ -22,7 +22,7 @@ const createItem = (req, res) => {
     .then((newItem) => res.status(201).send({ data: newItem }))
     .catch((err) => {
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
+        return res.status(BadRequestError).send({ message: "Invalid data" });
       }
       return res
         .status(SERVER_ERROR)
@@ -37,7 +37,7 @@ const deleteItem = (req, res) => {
     .then((item) => {
       if (String(item.owner) !== req.user._id) {
         return res
-          .status(FORBIDDEN_ERROR)
+          .status(ForbiddenError)
           .send({ message: "You are not authorized to delete this item." });
       }
       return item.deleteOne().then(() => {
@@ -46,10 +46,10 @@ const deleteItem = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR).send({ message: "Not found" });
+        return res.status(NotFoundError).send({ message: "Not found" });
       }
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
+        return res.status(BadRequestError).send({ message: "Invalid data" });
       }
       return res
         .status(SERVER_ERROR)
@@ -67,10 +67,10 @@ const likeItem = (req, res) => {
     .then((item) => res.status(200).send(item))
     .catch((err) => {
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
+        return res.status(BadRequestError).send({ message: "Invalid data" });
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR).send({ message: "Not found" });
+        return res.status(NotFoundError).send({ message: "Not found" });
       }
       return res
         .status(SERVER_ERROR)
@@ -88,10 +88,10 @@ const unlikeItem = (req, res) => {
     .then((item) => res.status(200).send(item))
     .catch((err) => {
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST_ERROR).send({ message: "Invalid data" });
+        return res.status(BadRequestError).send({ message: "Invalid data" });
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND_ERROR).send({ message: "Not found" });
+        return res.status(NotFoundError).send({ message: "Not found" });
       }
       return res
         .status(SERVER_ERROR)
