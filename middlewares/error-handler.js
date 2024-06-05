@@ -1,9 +1,10 @@
-module.exports = (error, req, res, next) => {
-  console.error(error);
-  error.statusCode = error.statusCode || 500;
-  error.status = error.status || "error";
-  res.status(error.statusCode).json({
-    status: error.statusCode,
-    message: error.message,
+module.exports = (err, req, res, next) => {
+  console.error(err);
+  // if an error has no status, set it to 500
+  const { statusCode = 500, message } = err;
+  res.status(statusCode).send({
+    // check the status and display a message based on it
+    message: statusCode === 500 ? "An error occurred on the server" : message,
   });
+  next();
 };
