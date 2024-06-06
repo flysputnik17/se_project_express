@@ -23,6 +23,7 @@ const getCurrentUser = (req, res, next) => {
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
+      console.error(err);
       if (err.name === "DocumentNotFoundError") {
         next(new NotFoundError("Not found"));
       }
@@ -45,6 +46,7 @@ const upDateCurrentUser = (req, res, next) => {
     .then((user) => res.status(200).send(user))
 
     .catch((err) => {
+      console.error(err);
       if (err.name === "ValidationError" || err.name === "CastError") {
         next(new BadRequestError("Invalid data"));
       }
@@ -80,6 +82,7 @@ const createUser = (req, res, next) => {
         });
     })
     .catch((err) => {
+      console.error(err);
       if (err.name === "ValidationError") {
         next(new BadRequestError("Invalid data"));
       } else {
@@ -103,6 +106,7 @@ const login = (req, res, next) => {
       return res.send({ token });
     })
     .catch((err) => {
+      console.error(err);
       if (err.message === "Incorrect password or email") {
         next(new UnauthorizedError("Incorrect password or email"));
       } else {

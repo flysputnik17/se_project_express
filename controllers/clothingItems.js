@@ -27,6 +27,7 @@ const createItem = (req, res, next) => {
   Item.create({ name, weather, imageUrl, owner: req.user._id })
     .then((newItem) => res.status(201).send({ data: newItem }))
     .catch((err) => {
+      console.error(err);
       if (err.name === "ValidationError") {
         next(new BadRequestError("Invalid data"));
       } else {
@@ -48,6 +49,7 @@ const deleteItem = (req, res, next) => {
       });
     })
     .catch((err) => {
+      console.error(err);
       console.error("err", err);
       if (err.name === "DocumentNotFoundError") {
         next(new ForbiddenError("You are not authorized to delete this item."));
@@ -69,6 +71,7 @@ const likeItem = (req, res, next) => {
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
+      console.error(err);
       if (err.name === "CastError") {
         next(new BadRequestError("Invalid data"));
       }
@@ -89,6 +92,7 @@ const unlikeItem = (req, res, next) => {
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
+      console.error(err);
       if (err.name === "CastError") {
         next(new BadRequestError("Invalid data"));
       }
