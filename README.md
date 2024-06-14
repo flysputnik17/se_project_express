@@ -1,5 +1,9 @@
 # Project 12
 
+## The Link for the project
+
+<a href="https://pavelwtwr.jumpingcrab.com" target="blank">pavelwtwr.jumpingcrab.com</a>
+
 ## Description and functionality
 
 Created a back-end server for the WTWR application.
@@ -27,16 +31,20 @@ Installed MongoDB to ensure initilization of the database that store the user an
 
 Utilized Postman to create a test user to check the project; GitHub was also used for this process
 
+deploy the backend and the frontend to google cloud and runing the app on the VM
+
 # WTWR (What to Wear?): Back End
 
 The back-end project is focused on creating a server for the WTWR application. You’ll gain a deeper understanding of how to work with databases, set up security and testing, and deploy web applications on a remote machine. The eventual goal is to create a server with an API and user authorization.
 
-## Running the Project
+# Domain name
 
-`npm run start` — to launch the server
+api.pavelwtwr.jumpingcrab.com
 
-`npm run dev` — to launch the server with the hot reload feature
+pavelwtwr.jumpingcrab.com
 
-### Testing
+www.pavelwtwr.jumpingcrab.com
 
-Before committing your code, make sure you edit the file `sprint.txt` in the root folder. The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 12
+# FrontEnd repo
+
+https://github.com/flysputnik17/se_project_react.git
