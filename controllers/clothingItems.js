@@ -36,7 +36,10 @@ const deleteItem = (req, res, next) => {
           res.send({ message: "Item deleted" });
         });
       }
-      next(new ForbiddenError("You are not authorized to delete this item."));
+
+      return next(
+        new ForbiddenError("You are not authorized to delete this item.")
+      );
     })
     .catch((err) => {
       console.error(err);
