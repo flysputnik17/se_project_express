@@ -2,7 +2,7 @@
 
 ## The Link for the project
 
-<a href="https://pavelwtwr.jumpingcrab.com" target="blank">pavelwtwr.jumpingcrab.com</a>
+<a href="https://pavelwtwr.jumpingcrab.com" target="blank">www.pavelwtwr.jumpingcrab.com</a>
 
 ## Description and functionality
 
