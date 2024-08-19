@@ -6,7 +6,7 @@ const {
   deleteItem,
   likeItem,
   unlikeItem,
-} = require("../controllers/clothingItems");
+} = require("../api/clothingItems");
 const { validateCardBody, validateId } = require("../middlewares/validation");
 
 router.get("/", getItems);

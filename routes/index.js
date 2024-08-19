@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { createUser, login } = require("../controllers/users");
+const { createUser, login } = require("../api/users");
 const userRouter = require("./users");
 const NotFoundError = require("../utils/NotFoundError");
 
