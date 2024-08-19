@@ -21,7 +21,14 @@ mongoose
     console.error(err);
   });
 
-app.use(cors());
+const corsOptions = {
+  origin: "https://wtwr-three.vercel.app", // Allow your frontend domain
+  methods: ["GET", "POST", "PATCH", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 app.use(requestLogger);
