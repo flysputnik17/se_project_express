@@ -22,20 +22,7 @@ mongoose
     console.error(err);
   });
 
-const corsOptions = {
-  origin(origin, callback) {
-    const allowedOrigins = ["https://wtwr-three.vercel.app"];
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: ["GET", "POST", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json());
 
