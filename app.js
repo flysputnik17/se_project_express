@@ -12,8 +12,9 @@ const { requestLogger, errorLogger } = require("./middlewares/logger");
 const app = express();
 const { PORT = 3001 } = process.env;
 console.log("process.env:", process.env.NODE_ENV);
+const { MONGO_URI } = process.env;
 mongoose
-  .connect(process.env.uri)
+  .connect(MONGO_URI)
   .then(() => {
     console.log("Connected to DB");
   })
