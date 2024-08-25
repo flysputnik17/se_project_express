@@ -13,7 +13,7 @@ const app = express();
 const { PORT = 3001 } = process.env;
 console.log("process.env:", process.env.NODE_ENV);
 mongoose
-  .connect("mongodb://127.0.0.1:27017/wtwr_db")
+  .connect(process.env.uri)
   .then(() => {
     console.log("Connected to DB");
   })
@@ -22,7 +22,7 @@ mongoose
   });
 
 const corsOptions = {
-  origin: "https://wtwr-three.vercel.app", // Allow your frontend domain
+  origin: "https://wtwr-three.vercel.app/", // Allow your frontend domain
   methods: ["GET", "POST", "PATCH", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
