@@ -1,10 +1,8 @@
-require("dotenv").config();
-
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+require("dotenv").config();
 const cors = require("cors");
-const helmet = require("helmet");
-
 const { errors } = require("celebrate");
 const mainRouter = require("./routes/index");
 const errorHandler = require("./middlewares/error-handler");
@@ -23,9 +21,16 @@ mongoose
 const { PORT = 3000 } = process.env;
 const app = express();
 
-app.use(helmet());
-app.use(cors());
+const corsOptions = {
+  origin: ["https://wtwr-three.vercel.app/"], // Include all allowed origins here
+  methods: ["GET", "POST", "PATCH", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(requestLogger);
