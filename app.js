@@ -22,7 +22,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 
 const corsOptions = {
-  origin: ["https://wtwr-three.vercel.app/"], // Include all allowed origins here
+  origin: ["https://wtwr-three.vercel.app/"],
   methods: ["GET", "POST", "PATCH", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
