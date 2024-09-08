@@ -93,7 +93,7 @@ const login = (req, res, next) => {
         expiresIn: "7d",
       });
 
-      return res.send({ token });
+      return res.status(200).send({ token });
     })
     .catch((err) => {
       console.error(err);
