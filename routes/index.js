@@ -18,8 +18,11 @@ router.use("/users", userRouter);
 router.use("/items", itemRouter);
 
 router.use((req, res, next) => {
-  console.log(`Requested URL: ${req.originalUrl}`);
-  next(new NotFoundError("Requested resource not found"));
+  if (req.originalUrl === "/") {
+    res.send("Welcome to the WTWR API");
+  } else {
+    next(new NotFoundError("Requested resource not found"));
+  }
 });
 
 module.exports = router;
