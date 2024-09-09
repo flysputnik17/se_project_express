@@ -11,13 +11,12 @@ const { limiter } = require("./middlewares/limiter");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 mongoose
-  // .connect("mongodb://127.0.0.1:27017/wtwr_db")
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to DB");
   })
   .catch((err) => console.error("DB Connection Error:", err));
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 const app = express();
 
 app.use(helmet());
