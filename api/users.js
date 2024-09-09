@@ -16,8 +16,7 @@ const getCurrentUser = (req, res, next) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         next(new NotFoundError("Not found"));
-      }
-      if (err.name === "CastError") {
+      } else if (err.name === "CastError") {
         next(new BadRequestError("Invalid data"));
       } else {
         next(err);
@@ -34,15 +33,10 @@ const upDateCurrentUser = (req, res, next) => {
   )
     .orFail()
     .then((user) => res.status(200).send(user))
-
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError" || err.name === "CastError") {
         next(new BadRequestError("Invalid data"));
-      }
-
-      if (err.name === "DocumentNotFoundError") {
-        next(new NotFoundError("Not found"));
       } else {
         next(err);
       }
